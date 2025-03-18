@@ -8,7 +8,6 @@ import { SendHorizonal } from "lucide-react";
 
 export const ChatRoom = () => {
   const searchParams = useSearchParams();
-
   const roomId = searchParams.get("room");
   const name = searchParams.get("name") || "Guest";
 
@@ -30,9 +29,9 @@ export const ChatRoom = () => {
     );
   }
 
-  const channel = ably.channels.get(`chat-${roomId}`);
-
   useEffect(() => {
+    const channel = ably.channels.get(`chat-${roomId}`);
+
     const messageHandler = (msg: Message) => {
       const receivedData = msg.data as { sender: string; text: string };
       setMessages((prev) => [
@@ -51,6 +50,7 @@ export const ChatRoom = () => {
 
   const sendMessage = () => {
     if (!message.trim()) return;
+    const channel = ably.channels.get(`chat-${roomId}`);
     channel.publish("message", { sender: name, text: message });
     setMessage("");
   };
